@@ -20,6 +20,11 @@
     "build": "bun build src/index.ts --outdir dist --target node --format esm && bun run build:types",
     "build:types": "tsc --project tsconfig.build.json --noEmitOnError false",
     "check": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "lint:md": "markdownlint-cli2 '*.md'",
+    "lint:all": "bun run lint && bun run lint:md",
+    "format": "biome format --write .",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -42,8 +47,10 @@
     "@opencode-ai/plugin": "1.2.16"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.5",
     "@opencode-ai/sdk": "^1.2.16",
     "bun-types": "latest",
+    "markdownlint-cli2": "^0.21.0",
     "typescript": "^5.7.3",
     "vitest": "^3.2.4"
   }

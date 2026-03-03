@@ -1,4 +1,4 @@
-import { type Plugin } from "@opencode-ai/plugin";
+import type { Plugin } from "@opencode-ai/plugin";
 import type { MessageWithParts } from "./types";
 
 // Addresses OpenCode #14930: the conversation context sent to the model lacks

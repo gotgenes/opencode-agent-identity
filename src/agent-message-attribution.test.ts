@@ -63,7 +63,12 @@ describe("AgentMessageAttributionPlugin", () => {
 
     const messages: MessageWithParts[] = [
       {
-        info: { role: "assistant", agent: "build", sessionID: "s1", id: "a1" } as any,
+        info: {
+          role: "assistant",
+          agent: "build",
+          sessionID: "s1",
+          id: "a1",
+        } as any,
         parts: [{ type: "tool", id: "t1" } as any],
       },
     ];

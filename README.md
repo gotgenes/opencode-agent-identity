@@ -43,6 +43,44 @@ State is keyed by session ID so concurrent sessions don't interfere.
 All agents in a session share one flat conversation history, but `MessageV2.toModelMessages()` strips the `info.agent` metadata when converting to the format sent to the LLM.
 This plugin uses the `experimental.chat.messages.transform` hook to prepend a `[agent: X]` header to each assistant message's first text part.
 
+## Development
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) — runtime, package manager, and test runner
+- [prek](https://prek.j178.dev/) — pre-commit hook framework (`brew install prek`)
+
+### Setup
+
+```sh
+bun install
+prek install
+```
+
+### Commands
+
+| Command | Description |
+| --- | --- |
+| `bun run check` | TypeScript type checking |
+| `bun run lint` | Biome linting + formatting check + import sorting |
+| `bun run lint:fix` | Auto-fix all Biome issues |
+| `bun run lint:md` | Markdown linting |
+| `bun run lint:all` | All linting checks |
+| `bun run format` | Format all files |
+| `bun run test` | Run tests |
+| `bun run test:watch` | Run tests in watch mode |
+| `bun run build` | Build the package |
+
+### Pre-commit hooks
+
+After running `prek install`, the following checks run automatically before each commit:
+
+- Trailing whitespace trimming
+- End-of-file newline enforcement
+- Large file detection
+- Markdown linting
+- Biome linting and formatting
+
 ## License
 
 [MIT](LICENSE)

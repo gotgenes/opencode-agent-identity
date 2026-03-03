@@ -1,4 +1,4 @@
-import { type Plugin } from "@opencode-ai/plugin";
+import type { Plugin } from "@opencode-ai/plugin";
 import type { MessageWithParts } from "./types";
 
 // Addresses OpenCode #7492: agents lack self-identity awareness when the user

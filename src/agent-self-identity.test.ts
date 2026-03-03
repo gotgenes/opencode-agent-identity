@@ -95,16 +95,14 @@ describe("AgentSelfIdentityPlugin", () => {
     const hooks = await AgentSelfIdentityPlugin({} as any);
 
     // Session A: build agent
-    await hooks["experimental.chat.messages.transform"]!(
-      {},
-      { messages: [userMsg("build", "session-a")] } as any,
-    );
+    await hooks["experimental.chat.messages.transform"]!({}, {
+      messages: [userMsg("build", "session-a")],
+    } as any);
 
     // Session B: plan agent
-    await hooks["experimental.chat.messages.transform"]!(
-      {},
-      { messages: [userMsg("plan", "session-b")] } as any,
-    );
+    await hooks["experimental.chat.messages.transform"]!({}, {
+      messages: [userMsg("plan", "session-b")],
+    } as any);
 
     // Session A system.transform should get "build"
     const systemA = { system: [] as string[] };
@@ -135,10 +133,9 @@ describe("AgentSelfIdentityPlugin", () => {
       assistantMsg("plan", "session-5"),
       userMsg("build", "session-5"),
     ];
-    await hooks["experimental.chat.messages.transform"]!(
-      {},
-      { messages } as any,
-    );
+    await hooks["experimental.chat.messages.transform"]!({}, {
+      messages,
+    } as any);
 
     const systemOutput = { system: [] as string[] };
     await hooks["experimental.chat.system.transform"]!(
