@@ -30,7 +30,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: "https://registry.npmjs.org"
         if: ${{ steps.release.outputs.release_created }}
 
@@ -46,7 +46,7 @@ jobs:
       - run: bun run test
         if: ${{ steps.release.outputs.release_created }}
 
-      - run: npm publish --provenance --access public
+      # Trusted publishing via OIDC — no NPM_TOKEN needed.
+      # Provenance is generated automatically with trusted publishing.
+      - run: npm publish --access public
         if: ${{ steps.release.outputs.release_created }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

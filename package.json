@@ -36,8 +36,7 @@
     "url": "https://github.com/gotgenes/opencode-agent-identity.git"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "dependencies": {
     "@opencode-ai/plugin": "1.2.15"
