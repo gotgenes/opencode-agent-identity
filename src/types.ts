@@ -5,6 +5,7 @@
 //
 // These helpers provide type-safe access to the agent field until the plugin
 // SDK is updated to use the v2 types.
+// See: https://github.com/anomalyco/opencode/issues/15916
 
 import type { Message, Part } from "@opencode-ai/sdk";
 
