@@ -33,7 +33,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gotgenes/opencode-agent-identity.git"
+    "url": "git+https://github.com/gotgenes/opencode-agent-identity.git"
   },
   "publishConfig": {
     "access": "public"
