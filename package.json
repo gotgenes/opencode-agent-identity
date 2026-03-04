@@ -1,6 +1,6 @@
 {
   "name": "@gotgenes/opencode-agent-identity",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "OpenCode plugins for agent self-identity and per-message agent attribution",
   "author": {
     "name": "Chris Lasher"
