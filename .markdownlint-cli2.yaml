@@ -2,3 +2,8 @@
 # between sections are intentional; exclude it from linting entirely.
 ignores:
   - "CHANGELOG.md"
+
+config:
+  line-length: false
+  no-duplicate-heading:
+    siblings_only: true
