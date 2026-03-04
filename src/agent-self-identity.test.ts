@@ -147,4 +147,36 @@ describe("AgentSelfIdentityPlugin", () => {
       'You are currently operating as the "build" agent.',
     );
   });
+
+  it("identifies as the command-triggered agent, not the previously active agent", async () => {
+    // Scenario: user has been working with "plan" for several turns, then
+    // invokes a slash command (e.g. /retro) that switches to a different agent.
+    // OpenCode sets info.agent on the command's user message to the
+    // command-triggered agent. The system prompt should reflect that agent,
+    // not the one that dominated the conversation history.
+    const hooks = await AgentSelfIdentityPlugin({} as any);
+
+    const messages = [
+      userMsg("plan", "session-6"),
+      assistantMsg("plan", "session-6"),
+      userMsg("plan", "session-6"),
+      assistantMsg("plan", "session-6"),
+      userMsg("plan", "session-6"),
+      assistantMsg("plan", "session-6"),
+      userMsg("retrospective", "session-6"), // /retro command
+    ];
+    await hooks["experimental.chat.messages.transform"]!({}, {
+      messages,
+    } as any);
+
+    const systemOutput = { system: [] as string[] };
+    await hooks["experimental.chat.system.transform"]!(
+      { sessionID: "session-6", model: {} as any },
+      systemOutput,
+    );
+
+    expect(systemOutput.system).toContain(
+      'You are currently operating as the "retrospective" agent.',
+    );
+  });
 });
