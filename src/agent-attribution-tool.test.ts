@@ -17,6 +17,17 @@ function mockClient(messages: ReturnType<typeof makeMessage>[]) {
 }
 
 describe("AgentAttributionToolPlugin", () => {
+  it("exposes an agent_attribution tool", async () => {
+    const client = mockClient([]);
+    const hooks = await AgentAttributionToolPlugin({ client } as any);
+
+    expect(hooks.tool).toBeDefined();
+    expect(hooks.tool!.agent_attribution).toBeDefined();
+    expect(hooks.tool!.agent_attribution.description).toEqual(
+      expect.any(String),
+    );
+  });
+
   it.skip("returns per-message agent attribution for a multi-agent session", async () => {
     const messages = [
       makeMessage("user", "project-manager"),
