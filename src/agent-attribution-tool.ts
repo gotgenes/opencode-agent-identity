@@ -8,8 +8,9 @@ export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
       agent_attribution: tool({
         description:
           "Get agent attribution for all messages in the current session. " +
-          "Returns which agent authored each message, useful for " +
-          "understanding multi-agent conversations.",
+          "Returns which agent authored each message and which model " +
+          "produced each assistant response, useful for understanding " +
+          "multi-agent conversations.",
         args: {},
         async execute(_args, context) {
           const response = await client.session.messages({
