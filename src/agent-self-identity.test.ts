@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { AgentSelfIdentityPlugin } from "./agent-self-identity";
 import type { MessageWithParts } from "./types";
 

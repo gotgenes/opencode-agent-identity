@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, jest } from "bun:test";
 import { AgentAttributionToolPlugin } from "./agent-attribution-tool";
 
 function makeMessage(role: "user" | "assistant", agent: string) {
@@ -11,7 +11,7 @@ function makeMessage(role: "user" | "assistant", agent: string) {
 function mockClient(messages: ReturnType<typeof makeMessage>[]) {
   return {
     session: {
-      messages: vi.fn().mockResolvedValue({ data: messages }),
+      messages: jest.fn().mockResolvedValue({ data: messages }),
     },
   };
 }
@@ -24,8 +24,8 @@ function toolContext(sessionID = "ses-1") {
     directory: "/tmp",
     worktree: "/tmp",
     abort: new AbortController().signal,
-    metadata: vi.fn(),
-    ask: vi.fn(),
+    metadata: jest.fn(),
+    ask: jest.fn(),
   };
 }
 
