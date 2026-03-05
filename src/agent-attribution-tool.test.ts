@@ -28,6 +28,29 @@ describe("AgentAttributionToolPlugin", () => {
     );
   });
 
+  it("returns empty string for a session with no messages", async () => {
+    const client = mockClient([]);
+    const hooks = await AgentAttributionToolPlugin({ client } as any);
+    const tool = hooks.tool!.agent_attribution;
+
+    const context = {
+      sessionID: "ses-1",
+      messageID: "msg-1",
+      agent: "retrospective",
+      directory: "/tmp",
+      worktree: "/tmp",
+      abort: new AbortController().signal,
+      metadata: vi.fn(),
+      ask: vi.fn(),
+    };
+    const result = await tool.execute({}, context);
+
+    expect(client.session.messages).toHaveBeenCalledWith({
+      path: { id: "ses-1" },
+    });
+    expect(result).toBe("");
+  });
+
   it.skip("returns per-message agent attribution for a multi-agent session", async () => {
     const messages = [
       makeMessage("user", "project-manager"),
