@@ -9,10 +9,8 @@ This package provides two plugins that improve agent identity awareness in [Open
 - **AgentSelfIdentityPlugin** — Injects a one-liner identity statement (e.g., `You are currently operating as the "build" agent.`) into the system prompt so the model knows which agent it's operating as.
   Addresses [OpenCode #7492](https://github.com/anomalyco/opencode/issues/7492).
 
-- **AgentMessageAttributionPlugin** — Prepends `[agent: X]` headers to each assistant message's text content before it reaches the LLM, so downstream agents (e.g., a Retrospective agent reviewing a full session) can identify which agent produced which response.
+- **AgentAttributionToolPlugin** — Exposes an `agent_attribution` tool that any agent can call to get per-message attribution for the current session (e.g., "which agent authored each message?"). Useful for agents that review multi-agent sessions, like a Retrospective agent.
   Addresses [OpenCode #14930](https://github.com/anomalyco/opencode/issues/14930).
-
-Both mutations are ephemeral — they affect only what the model sees in each call, without altering what's persisted in the database.
 
 ## Installation
 
@@ -38,10 +36,56 @@ This plugin uses two hooks with shared, session-scoped state:
 
 State is keyed by session ID so concurrent sessions don't interfere.
 
-### Agent Message Attribution
+### Agent Attribution Tool
 
 All agents in a session share one flat conversation history, but `MessageV2.toModelMessages()` strips the `info.agent` metadata when converting to the format sent to the LLM.
-This plugin uses the `experimental.chat.messages.transform` hook to prepend a `[agent: X]` header to each assistant message's first text part.
+This plugin exposes an `agent_attribution` tool that retrieves per-message attribution on demand via the OpenCode SDK.
+
+When called, the tool returns a numbered list of every message in the session with its role and agent:
+
+```text
+1. user (project-manager)
+2. assistant (project-manager)
+3. user (product-manager)
+4. assistant (product-manager)
+5. user (project-manager)
+6. assistant (project-manager)
+```
+
+#### Why a tool instead of inline tags?
+
+An earlier version of this package (v1) injected `[agent: X]` tags directly into assistant message text in the conversation history.
+This caused two problems:
+
+1. **Identity confusion**: When switching agents mid-session, the accumulated tags from the previous agent overwhelmed the system prompt identity, causing the model to identify as the wrong agent.
+2. **Self-authoring**: Models learned the `[agent: X]` pattern and started generating the tags themselves, creating a feedback loop that reinforced the wrong identity.
+
+The tool-based approach keeps the conversation history clean and lets agents query attribution only when they need it.
+
+#### Integrating with your agents
+
+To use the attribution tool, mention it in the agent's system prompt. For example, a Retrospective agent that reviews multi-agent sessions could include:
+
+```markdown
+## Multi-agent attribution
+
+This session may involve multiple agents. To determine which agent authored
+each message, call the `agent_attribution` tool. It returns a numbered list
+mapping each message to its role and agent name.
+```
+
+## Migrating from v1
+
+v2 removes `AgentMessageAttributionPlugin` and replaces it with `AgentAttributionToolPlugin`.
+
+If you were importing `AgentMessageAttributionPlugin` directly, replace it:
+
+```diff
+- import { AgentMessageAttributionPlugin } from "@gotgenes/opencode-agent-identity";
++ import { AgentAttributionToolPlugin } from "@gotgenes/opencode-agent-identity";
+```
+
+If you rely on the automatic plugin loading via `opencode.json` (the typical setup), no code changes are needed — just update the package version.
 
 ## Development
 
