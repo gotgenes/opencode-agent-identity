@@ -4,7 +4,7 @@
 
 An npm package providing two [OpenCode](https://opencode.ai/) plugins that improve agent identity awareness in multi-agent sessions:
 one injects agent identity into the system prompt, the other exposes a tool for querying per-message agent attribution via the SDK.
-Small library: ~5 source files, ~300 lines including tests.
+Small library — a handful of source files.
 
 **Runtime:** Bun (development, building, testing) / Node.js (published target)
 **Test framework:** Bun's built-in test runner (`bun test`)
@@ -34,6 +34,11 @@ Small library: ~5 source files, ~300 lines including tests.
 
 - **PR CI** (`.github/workflows/ci.yml`): type check, lint, test — runs on PRs and pushes to main.
 - **Release** (`.github/workflows/release-please.yml`): release-please + npm publish via OIDC trusted publishing — runs on push to main.
+
+## Development Workflow
+
+Use the TDD agent (`/tdd`) for production code changes.
+Use the Build agent (`/build`) for non-TDD tasks: configuration, CI, documentation, infrastructure.
 
 ## Git Commit Messages
 
