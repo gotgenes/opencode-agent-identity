@@ -72,7 +72,7 @@ describe("AgentAttributionToolPlugin", () => {
     expect(result).toBe("1. user (build)");
   });
 
-  it.skip("returns per-message agent attribution for a multi-agent session", async () => {
+  it("returns per-message agent attribution for a multi-agent session", async () => {
     const messages = [
       makeMessage("user", "project-manager"),
       makeMessage("assistant", "project-manager"),
