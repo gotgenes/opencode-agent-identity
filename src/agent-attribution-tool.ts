@@ -19,7 +19,7 @@ export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
           return messages
             .map(
               (msg, i) =>
-                `${i + 1}. ${msg.info.role} (${(msg.info as any).agent})`,
+                `${i + 1}. ${msg.info.role} (${(msg.info as any).agent ?? "unknown"})`,
             )
             .join("\n");
         },

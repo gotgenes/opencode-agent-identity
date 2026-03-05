@@ -16,10 +16,29 @@ function mockClient(messages: ReturnType<typeof makeMessage>[]) {
   };
 }
 
+function toolContext(sessionID = "ses-1") {
+  return {
+    sessionID,
+    messageID: "msg-1",
+    agent: "retrospective",
+    directory: "/tmp",
+    worktree: "/tmp",
+    abort: new AbortController().signal,
+    metadata: vi.fn(),
+    ask: vi.fn(),
+  };
+}
+
+async function setupTool(messages: ReturnType<typeof makeMessage>[]) {
+  const client = mockClient(messages);
+  const hooks = await AgentAttributionToolPlugin({ client } as any);
+  const tool = hooks.tool!.agent_attribution;
+  return { client, hooks, tool };
+}
+
 describe("AgentAttributionToolPlugin", () => {
   it("exposes an agent_attribution tool", async () => {
-    const client = mockClient([]);
-    const hooks = await AgentAttributionToolPlugin({ client } as any);
+    const { hooks } = await setupTool([]);
 
     expect(hooks.tool).toBeDefined();
     expect(hooks.tool!.agent_attribution).toBeDefined();
@@ -29,21 +48,8 @@ describe("AgentAttributionToolPlugin", () => {
   });
 
   it("returns empty string for a session with no messages", async () => {
-    const client = mockClient([]);
-    const hooks = await AgentAttributionToolPlugin({ client } as any);
-    const tool = hooks.tool!.agent_attribution;
-
-    const context = {
-      sessionID: "ses-1",
-      messageID: "msg-1",
-      agent: "retrospective",
-      directory: "/tmp",
-      worktree: "/tmp",
-      abort: new AbortController().signal,
-      metadata: vi.fn(),
-      ask: vi.fn(),
-    };
-    const result = await tool.execute({}, context);
+    const { client, tool } = await setupTool([]);
+    const result = await tool.execute({}, toolContext());
 
     expect(client.session.messages).toHaveBeenCalledWith({
       path: { id: "ses-1" },
@@ -52,83 +58,52 @@ describe("AgentAttributionToolPlugin", () => {
   });
 
   it("formats a single message with index, role, and agent", async () => {
-    const messages = [makeMessage("user", "build")];
-    const client = mockClient(messages);
-    const hooks = await AgentAttributionToolPlugin({ client } as any);
-    const tool = hooks.tool!.agent_attribution;
-
-    const context = {
-      sessionID: "ses-1",
-      messageID: "msg-1",
-      agent: "retrospective",
-      directory: "/tmp",
-      worktree: "/tmp",
-      abort: new AbortController().signal,
-      metadata: vi.fn(),
-      ask: vi.fn(),
-    };
-    const result = await tool.execute({}, context);
+    const { tool } = await setupTool([makeMessage("user", "build")]);
+    const result = await tool.execute({}, toolContext());
 
     expect(result).toBe("1. user (build)");
   });
 
   it("returns per-message agent attribution for a multi-agent session", async () => {
-    const messages = [
+    const { client, tool } = await setupTool([
       makeMessage("user", "project-manager"),
       makeMessage("assistant", "project-manager"),
       makeMessage("user", "product-manager"),
       makeMessage("assistant", "product-manager"),
       makeMessage("user", "project-manager"),
       makeMessage("assistant", "project-manager"),
-    ];
-    const client = mockClient(messages);
-    const hooks = await AgentAttributionToolPlugin({ client } as any);
+    ]);
 
-    const tool = hooks.tool!.agent_attribution;
-    expect(tool).toBeDefined();
-
-    const context = {
-      sessionID: "ses-1",
-      messageID: "msg-1",
-      agent: "retrospective",
-      directory: "/tmp",
-      worktree: "/tmp",
-      abort: new AbortController().signal,
-      metadata: vi.fn(),
-      ask: vi.fn(),
-    };
-    const result = await tool.execute({}, context);
+    const result = await tool.execute({}, toolContext());
 
     expect(client.session.messages).toHaveBeenCalledWith({
       path: { id: "ses-1" },
     });
 
-    // Should contain per-message attribution lines
-    expect(result).toContain("project-manager");
-    expect(result).toContain("product-manager");
-
-    // Each message should be represented
     const lines = result.trim().split("\n");
-    expect(lines).toHaveLength(6);
+    expect(lines).toEqual([
+      "1. user (project-manager)",
+      "2. assistant (project-manager)",
+      "3. user (product-manager)",
+      "4. assistant (product-manager)",
+      "5. user (project-manager)",
+      "6. assistant (project-manager)",
+    ]);
+  });
 
-    // Verify ordering and role/agent content
-    expect(lines[0]).toContain("1.");
-    expect(lines[0]).toContain("user");
-    expect(lines[0]).toContain("project-manager");
-    expect(lines[1]).toContain("2.");
-    expect(lines[1]).toContain("assistant");
-    expect(lines[1]).toContain("project-manager");
-    expect(lines[2]).toContain("3.");
-    expect(lines[2]).toContain("user");
-    expect(lines[2]).toContain("product-manager");
-    expect(lines[3]).toContain("4.");
-    expect(lines[3]).toContain("assistant");
-    expect(lines[3]).toContain("product-manager");
-    expect(lines[4]).toContain("5.");
-    expect(lines[4]).toContain("user");
-    expect(lines[4]).toContain("project-manager");
-    expect(lines[5]).toContain("6.");
-    expect(lines[5]).toContain("assistant");
-    expect(lines[5]).toContain("project-manager");
+  it("handles messages without an agent field", async () => {
+    const msgNoAgent = {
+      info: { role: "assistant" as const, id: "a1", sessionID: "ses-1" },
+      parts: [{ type: "text" as const, text: "hello" }],
+    };
+    const { tool } = await setupTool([
+      makeMessage("user", "build"),
+      msgNoAgent as any,
+    ]);
+    const result = await tool.execute({}, toolContext());
+    const lines = result.trim().split("\n");
+
+    expect(lines[0]).toBe("1. user (build)");
+    expect(lines[1]).toBe("2. assistant (unknown)");
   });
 });
