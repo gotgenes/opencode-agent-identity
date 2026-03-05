@@ -1,2 +1,2 @@
-export { AgentMessageAttributionPlugin } from "./agent-message-attribution";
+export { AgentAttributionToolPlugin } from "./agent-attribution-tool";
 export { AgentSelfIdentityPlugin } from "./agent-self-identity";

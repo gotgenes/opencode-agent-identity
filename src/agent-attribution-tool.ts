@@ -1,5 +1,6 @@
 import type { Plugin } from "@opencode-ai/plugin";
 import { tool } from "@opencode-ai/plugin/tool";
+import type { MessageWithAgent } from "./types";
 
 export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
   return {
@@ -17,10 +18,10 @@ export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
           const messages = response.data ?? [];
           if (messages.length === 0) return "";
           return messages
-            .map(
-              (msg, i) =>
-                `${i + 1}. ${msg.info.role} (${(msg.info as any).agent ?? "unknown"})`,
-            )
+            .map((msg, i) => {
+              const info = msg.info as Partial<MessageWithAgent>;
+              return `${i + 1}. ${msg.info.role} (${info.agent ?? "unknown"})`;
+            })
             .join("\n");
         },
       }),
