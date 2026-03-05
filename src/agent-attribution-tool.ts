@@ -1,5 +1,5 @@
 import type { Plugin } from "@opencode-ai/plugin";
-import { tool } from "@opencode-ai/plugin/tool";
+import { tool } from "@opencode-ai/plugin";
 import type { MessageWithAgent } from "./types";
 
 export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {

@@ -7,7 +7,7 @@ one injects agent identity into the system prompt, the other exposes a tool for 
 Small library: ~5 source files, ~300 lines including tests.
 
 **Runtime:** Bun (development, building, testing) / Node.js (published target)
-**Test framework:** Vitest
+**Test framework:** Bun's built-in test runner (`bun test`)
 **Module format:** ESM (`"type": "module"`)
 
 ## Commands
@@ -27,7 +27,6 @@ Small library: ~5 source files, ~300 lines including tests.
 
 - **Formatting and linting:** Biome handles formatting, linting, and import sorting. Config in `biome.json`.
 - **Import style:** Use `import type { X }` (not `import { type X }`). Biome enforces this.
-- **Plugin SDK runtime imports:** Import the `tool` function from the sub-path `@opencode-ai/plugin/tool`, not from `@opencode-ai/plugin`. The main entry point's re-export (`export * from "./tool"`) lacks a `.js` extension and fails under Vitest ESM resolution. Type-only imports from `@opencode-ai/plugin` are fine (they're erased at compile time).
 - **Test files:** `noExplicitAny` and `noNonNullAssertion` are disabled in `*.test.ts` files. Tests use `as any` casts for two reasons: the SDK v1 types lack the `agent` field that exists at runtime (see `src/types.ts`), and plugin tests pass partial mocks for `PluginInput` and `ToolContext`.
 - **Pre-commit hooks:** Managed by [prek](https://prek.j178.dev/) (`prek.toml`). Run `prek install` after cloning.
 
