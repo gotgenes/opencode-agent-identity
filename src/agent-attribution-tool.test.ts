@@ -134,8 +134,7 @@ describe("AgentAttributionToolPlugin", () => {
     );
   });
 
-  // TODO: Remove skip once model attribution is implemented
-  it.skip("includes model on assistant messages in a multi-model session", async () => {
+  it("includes model on assistant messages in a multi-model session", async () => {
     const { tool } = await setupTool([
       makeMessage("user", "build"),
       makeAssistantMessage("build", "anthropic", "claude-opus-4-6"),
