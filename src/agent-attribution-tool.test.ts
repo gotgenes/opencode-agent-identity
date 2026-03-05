@@ -51,6 +51,27 @@ describe("AgentAttributionToolPlugin", () => {
     expect(result).toBe("");
   });
 
+  it("formats a single message with index, role, and agent", async () => {
+    const messages = [makeMessage("user", "build")];
+    const client = mockClient(messages);
+    const hooks = await AgentAttributionToolPlugin({ client } as any);
+    const tool = hooks.tool!.agent_attribution;
+
+    const context = {
+      sessionID: "ses-1",
+      messageID: "msg-1",
+      agent: "retrospective",
+      directory: "/tmp",
+      worktree: "/tmp",
+      abort: new AbortController().signal,
+      metadata: vi.fn(),
+      ask: vi.fn(),
+    };
+    const result = await tool.execute({}, context);
+
+    expect(result).toBe("1. user (build)");
+  });
+
   it.skip("returns per-message agent attribution for a multi-agent session", async () => {
     const messages = [
       makeMessage("user", "project-manager"),

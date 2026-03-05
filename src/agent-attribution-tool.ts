@@ -16,7 +16,12 @@ export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
           });
           const messages = response.data ?? [];
           if (messages.length === 0) return "";
-          return "";
+          return messages
+            .map(
+              (msg, i) =>
+                `${i + 1}. ${msg.info.role} (${(msg.info as any).agent})`,
+            )
+            .join("\n");
         },
       }),
     },
