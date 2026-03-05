@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.0](https://github.com/gotgenes/opencode-agent-identity/compare/v1.0.1...v2.0.0) (2026-03-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* AgentMessageAttributionPlugin has been removed and is no longer exported. Use AgentAttributionToolPlugin instead.
+
+### Features
+
+* agent_attribution tool calls SDK to fetch session messages ([78e9a12](https://github.com/gotgenes/opencode-agent-identity/commit/78e9a12c60b9944949f49662153a5fa4f3a1138b))
+* expose agent_attribution tool from AgentAttributionToolPlugin ([8ce59cc](https://github.com/gotgenes/opencode-agent-identity/commit/8ce59cc433e8d91ef1d5c94bbcc7e0e64e9457df))
+* format per-message attribution as numbered lines ([090350a](https://github.com/gotgenes/opencode-agent-identity/commit/090350ad6456432b4b299f430ca3f1184d4244d0))
+* replace AgentMessageAttributionPlugin with AgentAttributionToolPlugin ([b562adc](https://github.com/gotgenes/opencode-agent-identity/commit/b562adcc4fdecdd9602d49c2f6339b3f221bf237))
+
 ## [1.0.1](https://github.com/gotgenes/opencode-agent-identity/compare/v1.0.0...v1.0.1) (2026-03-04)
 
 
