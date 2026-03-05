@@ -1,5 +1,12 @@
 # @gotgenes/opencode-agent-identity
 
+[![npm version](https://img.shields.io/npm/v/@gotgenes/opencode-agent-identity?style=flat&logo=npm&logoColor=white)](https://www.npmjs.com/package/@gotgenes/opencode-agent-identity)
+[![CI](https://img.shields.io/github/actions/workflow/status/gotgenes/opencode-agent-identity/ci.yml?style=flat&logo=github&label=CI)](https://github.com/gotgenes/opencode-agent-identity/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Bun](https://img.shields.io/badge/Bun-%3E%3D1.0-f9f1e1?style=flat&logo=bun&logoColor=black)](https://bun.sh/)
+[![OpenCode Plugin](https://img.shields.io/badge/OpenCode-Plugin-8B5CF6?style=flat)](https://opencode.ai/)
+
 OpenCode plugins for agent self-identity and per-message agent attribution.
 
 ## What it does
