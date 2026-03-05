@@ -20,7 +20,12 @@ export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
           return messages
             .map((msg, i) => {
               const info = msg.info as Partial<MessageWithAgent>;
-              return `${i + 1}. ${msg.info.role} (${info.agent ?? "unknown"})`;
+              const agent = info.agent ?? "unknown";
+              const base = `${i + 1}. ${msg.info.role} (${agent})`;
+              if (msg.info.role === "assistant") {
+                return `${base} [${msg.info.providerID}/${msg.info.modelID}]`;
+              }
+              return base;
             })
             .join("\n");
         },

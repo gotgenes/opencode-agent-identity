@@ -83,13 +83,14 @@ describe("AgentAttributionToolPlugin", () => {
   });
 
   it("returns per-message agent attribution for a multi-agent session", async () => {
+    const model = { providerID: "anthropic", modelID: "claude-sonnet-4-6" };
     const { client, tool } = await setupTool([
       makeMessage("user", "project-manager"),
-      makeMessage("assistant", "project-manager"),
+      makeAssistantMessage("project-manager", model.providerID, model.modelID),
       makeMessage("user", "product-manager"),
-      makeMessage("assistant", "product-manager"),
+      makeAssistantMessage("product-manager", model.providerID, model.modelID),
       makeMessage("user", "project-manager"),
-      makeMessage("assistant", "project-manager"),
+      makeAssistantMessage("project-manager", model.providerID, model.modelID),
     ]);
 
     const result = await tool.execute({}, toolContext());
@@ -101,17 +102,23 @@ describe("AgentAttributionToolPlugin", () => {
     const lines = result.trim().split("\n");
     expect(lines).toEqual([
       "1. user (project-manager)",
-      "2. assistant (project-manager)",
+      "2. assistant (project-manager) [anthropic/claude-sonnet-4-6]",
       "3. user (product-manager)",
-      "4. assistant (product-manager)",
+      "4. assistant (product-manager) [anthropic/claude-sonnet-4-6]",
       "5. user (project-manager)",
-      "6. assistant (project-manager)",
+      "6. assistant (project-manager) [anthropic/claude-sonnet-4-6]",
     ]);
   });
 
   it("handles messages without an agent field", async () => {
     const msgNoAgent = {
-      info: { role: "assistant" as const, id: "a1", sessionID: "ses-1" },
+      info: {
+        role: "assistant" as const,
+        id: "a1",
+        sessionID: "ses-1",
+        providerID: "anthropic",
+        modelID: "claude-sonnet-4-6",
+      },
       parts: [{ type: "text" as const, text: "hello" }],
     };
     const { tool } = await setupTool([
@@ -122,7 +129,9 @@ describe("AgentAttributionToolPlugin", () => {
     const lines = result.trim().split("\n");
 
     expect(lines[0]).toBe("1. user (build)");
-    expect(lines[1]).toBe("2. assistant (unknown)");
+    expect(lines[1]).toBe(
+      "2. assistant (unknown) [anthropic/claude-sonnet-4-6]",
+    );
   });
 
   // TODO: Remove skip once model attribution is implemented
