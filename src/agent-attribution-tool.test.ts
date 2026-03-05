@@ -8,6 +8,24 @@ function makeMessage(role: "user" | "assistant", agent: string) {
   };
 }
 
+function makeAssistantMessage(
+  agent: string,
+  providerID: string,
+  modelID: string,
+) {
+  return {
+    info: {
+      role: "assistant" as const,
+      agent,
+      providerID,
+      modelID,
+      id: `msg-${Math.random()}`,
+      sessionID: "ses-1",
+    },
+    parts: [{ type: "text" as const, text: "some content" }],
+  };
+}
+
 function mockClient(messages: ReturnType<typeof makeMessage>[]) {
   return {
     session: {
@@ -105,5 +123,24 @@ describe("AgentAttributionToolPlugin", () => {
 
     expect(lines[0]).toBe("1. user (build)");
     expect(lines[1]).toBe("2. assistant (unknown)");
+  });
+
+  // TODO: Remove skip once model attribution is implemented
+  it.skip("includes model on assistant messages in a multi-model session", async () => {
+    const { tool } = await setupTool([
+      makeMessage("user", "build"),
+      makeAssistantMessage("build", "anthropic", "claude-opus-4-6"),
+      makeMessage("user", "retrospective"),
+      makeAssistantMessage("retrospective", "anthropic", "claude-sonnet-4-6"),
+    ]);
+    const result = await tool.execute({}, toolContext());
+    const lines = result.trim().split("\n");
+
+    expect(lines).toEqual([
+      "1. user (build)",
+      "2. assistant (build) [anthropic/claude-opus-4-6]",
+      "3. user (retrospective)",
+      "4. assistant (retrospective) [anthropic/claude-sonnet-4-6]",
+    ]);
   });
 });
