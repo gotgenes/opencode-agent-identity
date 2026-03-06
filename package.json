@@ -44,10 +44,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "1.2.18"
+    "@opencode-ai/plugin": "^1.2.18"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.6",
+    "@biomejs/biome": "^2.4.6",
     "@opencode-ai/sdk": "^1.2.18",
     "bun-types": "latest",
     "markdownlint-cli2": "^0.21.0",
