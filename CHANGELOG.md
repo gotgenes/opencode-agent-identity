@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/gotgenes/opencode-agent-identity/compare/v2.0.0...v2.1.0) (2026-03-06)
+
+
+### Features
+
+* include model attribution on assistant messages in agent_attribution tool ([f7e54b7](https://github.com/gotgenes/opencode-agent-identity/commit/f7e54b72588f663bdf8511995ef4b4b5b3696ea5))
+
 ## [2.0.0](https://github.com/gotgenes/opencode-agent-identity/compare/v1.0.1...v2.0.0) (2026-03-05)
 
 
