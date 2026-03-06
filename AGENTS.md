@@ -47,7 +47,7 @@ The package exports two independent OpenCode plugins from `src/index.ts`:
 
 State is keyed by session ID so concurrent sessions don't interfere.
 
-**AgentAttributionToolPlugin** calls `client.session.messages()` via the OpenCode SDK to fetch all messages, then formats them as a numbered list. User messages include only the role; assistant messages include the agent name and provider/model. The `agent` field on user messages reflects which agent the message was routed to (not which agent processed it), so only assistant attribution is meaningful.
+**AgentAttributionToolPlugin** calls `client.session.messages()` via the OpenCode SDK to fetch all messages. The `agent` field on user messages reflects which agent the message was routed to (not which agent processed it), so only assistant attribution is shown.
 
 Shared types live in `src/types.ts` — see [SDK Type Gap](#sdk-type-gap) below.
 
@@ -61,7 +61,7 @@ The build has two steps (both run by `bun run build`):
 `tsconfig.json` is for development (`noEmit`, `bun-types` included).
 `tsconfig.build.json` extends it, overrides to `emitDeclarationOnly`, and excludes test files.
 
-The package publishes only the `dist/` directory (per the `files` field in `package.json`).
+The package publishes the `dist/` directory and `MIGRATION.md` (per the `files` field in `package.json`).
 Single entry point: `dist/index.js` (code) + `dist/index.d.ts` (types).
 
 ## Testing Patterns
@@ -105,6 +105,8 @@ The README ships on npm, so documentation changes are releasable.
 
 Use the TDD agent (`/tdd`) for production code changes.
 Use the Build agent (`/build`) for non-TDD tasks: configuration, CI, documentation, infrastructure.
+
+When a code change alters plugin behavior (output format, hook semantics, tool interface), update the Architecture section of this file in the same workflow.
 
 ## Git Commit Messages
 
