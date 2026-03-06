@@ -14,7 +14,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "MIGRATION.md"
   ],
   "scripts": {
     "build": "bun build src/index.ts --outdir dist --target node --format esm && bun run build:types",

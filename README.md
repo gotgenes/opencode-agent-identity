@@ -16,7 +16,7 @@ This package provides two plugins that improve agent identity awareness in [Open
 - **AgentSelfIdentityPlugin** — Injects a one-liner identity statement (e.g., `You are currently operating as the "build" agent.`) into the system prompt so the model knows which agent it's operating as.
   Addresses [OpenCode #7492](https://github.com/anomalyco/opencode/issues/7492).
 
-- **AgentAttributionToolPlugin** — Exposes an `agent_attribution` tool that any agent can call to get per-message attribution for the current session (e.g., "which agent authored each message?"). Useful for agents that review multi-agent sessions, like a Retrospective agent.
+- **AgentAttributionToolPlugin** — Exposes an `agent_attribution` tool that any agent can call to get per-message attribution for the current session. Returns which agent produced each assistant response and which model was used. Useful for agents that review multi-agent sessions, like a Retrospective agent.
   Addresses [OpenCode #14930](https://github.com/anomalyco/opencode/issues/14930).
 
 ## Installation
@@ -48,15 +48,15 @@ State is keyed by session ID so concurrent sessions don't interfere.
 All agents in a session share one flat conversation history, but `MessageV2.toModelMessages()` strips the `info.agent` metadata when converting to the format sent to the LLM.
 This plugin exposes an `agent_attribution` tool that retrieves per-message attribution on demand via the OpenCode SDK.
 
-When called, the tool returns a numbered list of every message in the session with its role and agent.
-Assistant messages also include the provider and model that produced the response:
+When called, the tool returns a numbered list of every message in the session.
+User messages show only the role; assistant messages include the agent name and the provider and model that produced the response:
 
 ```text
-1. user (project-manager)
+1. user
 2. assistant (project-manager) [anthropic/claude-sonnet-4-6]
-3. user (product-manager)
+3. user
 4. assistant (product-manager) [anthropic/claude-sonnet-4-6]
-5. user (project-manager)
+5. user
 6. assistant (project-manager) [anthropic/claude-sonnet-4-6]
 ```
 
@@ -77,24 +77,16 @@ To use the attribution tool, mention it in the agent's system prompt. For exampl
 ```markdown
 ## Multi-agent attribution
 
-This session may involve multiple agents. To determine which agent authored
-each message, call the `agent_attribution` tool. It returns a numbered list
-mapping each message to its role and agent name. Assistant messages also
-include the provider and model that produced the response.
+This session may involve multiple agents. To determine which agent produced
+each response, call the `agent_attribution` tool. It returns a numbered list
+of every message in the session. User messages show only the role; assistant
+messages include the agent name and the provider and model that produced the
+response.
 ```
 
-## Migrating from v1
+## Upgrading
 
-v2 removes `AgentMessageAttributionPlugin` and replaces it with `AgentAttributionToolPlugin`.
-
-If you were importing `AgentMessageAttributionPlugin` directly, replace it:
-
-```diff
-- import { AgentMessageAttributionPlugin } from "@gotgenes/opencode-agent-identity";
-+ import { AgentAttributionToolPlugin } from "@gotgenes/opencode-agent-identity";
-```
-
-If you rely on the automatic plugin loading via `opencode.json` (the typical setup), no code changes are needed — just update the package version.
+See [MIGRATION.md](MIGRATION.md) for upgrade guides between major versions.
 
 ## Development
 

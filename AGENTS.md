@@ -38,7 +38,7 @@ The package exports two independent OpenCode plugins from `src/index.ts`:
 | Plugin | File | Mechanism | Purpose |
 | --- | --- | --- | --- |
 | `AgentSelfIdentityPlugin` | `src/agent-self-identity.ts` | Two hooks with session-scoped shared state | Injects `You are currently operating as the "X" agent.` into the system prompt so models know which agent they are |
-| `AgentAttributionToolPlugin` | `src/agent-attribution-tool.ts` | Tool registration via `tool()` | Exposes an `agent_attribution` tool that returns a numbered list of all messages in the session with their agent and model |
+| `AgentAttributionToolPlugin` | `src/agent-attribution-tool.ts` | Tool registration via `tool()` | Exposes an `agent_attribution` tool that returns a numbered list of all messages in the session; user messages show only the role, assistant messages include the agent name and provider/model |
 
 **AgentSelfIdentityPlugin** uses a two-phase hook pattern:
 
@@ -47,7 +47,7 @@ The package exports two independent OpenCode plugins from `src/index.ts`:
 
 State is keyed by session ID so concurrent sessions don't interfere.
 
-**AgentAttributionToolPlugin** calls `client.session.messages()` via the OpenCode SDK to fetch all messages, then formats them with role, agent name, and provider/model for assistant messages.
+**AgentAttributionToolPlugin** calls `client.session.messages()` via the OpenCode SDK to fetch all messages, then formats them as a numbered list. User messages include only the role; assistant messages include the agent name and provider/model. The `agent` field on user messages reflects which agent the message was routed to (not which agent processed it), so only assistant attribution is meaningful.
 
 Shared types live in `src/types.ts` — see [SDK Type Gap](#sdk-type-gap) below.
 
