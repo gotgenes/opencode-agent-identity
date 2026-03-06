@@ -29,6 +29,7 @@ Small library — a handful of source files.
 - **Import style:** Use `import type { X }` (not `import { type X }`). Biome enforces this.
 - **Test files:** `noExplicitAny` and `noNonNullAssertion` are disabled in `*.test.ts` files. Tests use `as any` casts for two reasons: the SDK v1 types lack the `agent` field that exists at runtime (see `src/types.ts`), and plugin tests pass partial mocks for `PluginInput` and `ToolContext`.
 - **Pre-commit hooks:** Managed by [prek](https://prek.j178.dev/) (`prek.toml`). Run `prek install` after cloning.
+- **Dependency versions:** Use caret (`^`) ranges in `package.json`. The `bun.lock` lockfile ensures reproducible installs; exact pins are redundant.
 
 ## Architecture
 
@@ -90,7 +91,15 @@ When the plugin SDK updates to use v2 types, these augmentations and the associa
 ## CI
 
 - **PR CI** (`.github/workflows/ci.yml`): type check, lint, test — runs on PRs and pushes to main.
-- **Release** (`.github/workflows/release-please.yml`): release-please + npm publish via OIDC trusted publishing — runs on push to main.
+- **Release** (`.github/workflows/release-please.yml`): release-please (manifest mode) + npm publish via OIDC trusted publishing — runs on push to main.
+
+### Release-please configuration
+
+Release-please runs in **manifest mode** — the workflow references `release-please-config.json` (config) and `.release-please-manifest.json` (version tracking).
+Do not pass `release-type` as a workflow action input; it bypasses the config file.
+
+The README ships on npm, so documentation changes are releasable.
+`changelog-sections` in `release-please-config.json` controls which conventional commit types trigger a release: `feat`, `fix`, `perf`, `revert`, `docs`, and `chore` are visible; others (`style`, `refactor`, `test`, `build`, `ci`) are hidden.
 
 ## Development Workflow
 
@@ -99,4 +108,5 @@ Use the Build agent (`/build`) for non-TDD tasks: configuration, CI, documentati
 
 ## Git Commit Messages
 
-Conventional commits: `feat:`, `fix:`, `chore:`, etc.
+Conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, etc.
+See [Release-please configuration](#release-please-configuration) for which types trigger releases.
