@@ -48,15 +48,16 @@ State is keyed by session ID so concurrent sessions don't interfere.
 All agents in a session share one flat conversation history, but `MessageV2.toModelMessages()` strips the `info.agent` metadata when converting to the format sent to the LLM.
 This plugin exposes an `agent_attribution` tool that retrieves per-message attribution on demand via the OpenCode SDK.
 
-When called, the tool returns a numbered list of every message in the session with its role and agent:
+When called, the tool returns a numbered list of every message in the session with its role and agent.
+Assistant messages also include the provider and model that produced the response:
 
 ```text
 1. user (project-manager)
-2. assistant (project-manager)
+2. assistant (project-manager) [anthropic/claude-sonnet-4-6]
 3. user (product-manager)
-4. assistant (product-manager)
+4. assistant (product-manager) [anthropic/claude-sonnet-4-6]
 5. user (project-manager)
-6. assistant (project-manager)
+6. assistant (project-manager) [anthropic/claude-sonnet-4-6]
 ```
 
 #### Why a tool instead of inline tags?
@@ -78,7 +79,8 @@ To use the attribution tool, mention it in the agent's system prompt. For exampl
 
 This session may involve multiple agents. To determine which agent authored
 each message, call the `agent_attribution` tool. It returns a numbered list
-mapping each message to its role and agent name.
+mapping each message to its role and agent name. Assistant messages also
+include the provider and model that produced the response.
 ```
 
 ## Migrating from v1
