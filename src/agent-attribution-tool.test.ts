@@ -75,11 +75,11 @@ describe("AgentAttributionToolPlugin", () => {
     expect(result).toBe("");
   });
 
-  it("formats a single message with index, role, and agent", async () => {
+  it("formats a single user message with index and role", async () => {
     const { tool } = await setupTool([makeMessage("user", "build")]);
     const result = await tool.execute({}, toolContext());
 
-    expect(result).toBe("1. user (build)");
+    expect(result).toBe("1. user");
   });
 
   it("returns per-message agent attribution for a multi-agent session", async () => {
@@ -101,11 +101,11 @@ describe("AgentAttributionToolPlugin", () => {
 
     const lines = result.trim().split("\n");
     expect(lines).toEqual([
-      "1. user (project-manager)",
+      "1. user",
       "2. assistant (project-manager) [anthropic/claude-sonnet-4-6]",
-      "3. user (product-manager)",
+      "3. user",
       "4. assistant (product-manager) [anthropic/claude-sonnet-4-6]",
-      "5. user (project-manager)",
+      "5. user",
       "6. assistant (project-manager) [anthropic/claude-sonnet-4-6]",
     ]);
   });
@@ -128,7 +128,7 @@ describe("AgentAttributionToolPlugin", () => {
     const result = await tool.execute({}, toolContext());
     const lines = result.trim().split("\n");
 
-    expect(lines[0]).toBe("1. user (build)");
+    expect(lines[0]).toBe("1. user");
     expect(lines[1]).toBe(
       "2. assistant (unknown) [anthropic/claude-sonnet-4-6]",
     );
@@ -145,9 +145,9 @@ describe("AgentAttributionToolPlugin", () => {
     const lines = result.trim().split("\n");
 
     expect(lines).toEqual([
-      "1. user (build)",
+      "1. user",
       "2. assistant (build) [anthropic/claude-opus-4-6]",
-      "3. user (retrospective)",
+      "3. user",
       "4. assistant (retrospective) [anthropic/claude-sonnet-4-6]",
     ]);
   });

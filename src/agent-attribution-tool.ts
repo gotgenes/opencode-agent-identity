@@ -8,9 +8,8 @@ export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
       agent_attribution: tool({
         description:
           "Get agent attribution for all messages in the current session. " +
-          "Returns which agent authored each message and which model " +
-          "produced each assistant response, useful for understanding " +
-          "multi-agent conversations.",
+          "Returns which agent produced each assistant response and which " +
+          "model was used, useful for understanding multi-agent conversations.",
         args: {},
         async execute(_args, context) {
           const response = await client.session.messages({
@@ -20,13 +19,13 @@ export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
           if (messages.length === 0) return "";
           return messages
             .map((msg, i) => {
-              const info = msg.info as Partial<MessageWithAgent>;
-              const agent = info.agent ?? "unknown";
-              const base = `${i + 1}. ${msg.info.role} (${agent})`;
+              const line = `${i + 1}. ${msg.info.role}`;
               if (msg.info.role === "assistant") {
-                return `${base} [${msg.info.providerID}/${msg.info.modelID}]`;
+                const info = msg.info as Partial<MessageWithAgent>;
+                const agent = info.agent ?? "unknown";
+                return `${line} (${agent}) [${msg.info.providerID}/${msg.info.modelID}]`;
               }
-              return base;
+              return line;
             })
             .join("\n");
         },
