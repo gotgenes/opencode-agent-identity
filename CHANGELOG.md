@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.1.1](https://github.com/gotgenes/opencode-agent-identity/compare/v2.1.0...v2.1.1) (2026-03-06)
+
+
+### Documentation
+
+* document release-please manifest mode, releasable commit types, and dependency version convention ([2beebe3](https://github.com/gotgenes/opencode-agent-identity/commit/2beebe360c05cd36f06e28271744fcdc2f93fe79))
+* update agent_attribution output format in README ([9d4fef6](https://github.com/gotgenes/opencode-agent-identity/commit/9d4fef6060226afe35a60667598ecceec7e72138))
+
+
+### Miscellaneous Chores
+
+* loosen exact pins to caret ranges ([1ab0be5](https://github.com/gotgenes/opencode-agent-identity/commit/1ab0be5d2ff1147e122c5f6ef559f6a109761f7b))
+* make chore commits visible in changelog and releasable ([61062b1](https://github.com/gotgenes/opencode-agent-identity/commit/61062b1d57f73851da1cce61f97a7896b8771c47))
+* treat docs commits as releasable patch changes ([4948ea0](https://github.com/gotgenes/opencode-agent-identity/commit/4948ea09154b87d15a74350459e46ef8063026c7))
+* update @opencode-ai/plugin, @opencode-ai/sdk, and @biomejs/biome ([7a58232](https://github.com/gotgenes/opencode-agent-identity/commit/7a58232aec68e0962b65051a7bb0c64deaa700cc))
+
 ## [2.1.0](https://github.com/gotgenes/opencode-agent-identity/compare/v2.0.0...v2.1.0) (2026-03-06)
 
 
