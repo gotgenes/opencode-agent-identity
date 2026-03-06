@@ -151,4 +151,22 @@ describe("AgentAttributionToolPlugin", () => {
       "4. assistant (retrospective) [anthropic/claude-sonnet-4-6]",
     ]);
   });
+
+  it("omits agent annotation from user messages, shows it only on assistant messages", async () => {
+    const { tool } = await setupTool([
+      makeMessage("user", "project-manager"),
+      makeAssistantMessage("project-manager", "anthropic", "claude-sonnet-4-6"),
+      makeMessage("user", "project-manager"),
+      makeAssistantMessage("retrospective", "anthropic", "claude-sonnet-4-6"),
+    ]);
+    const result = await tool.execute({}, toolContext());
+    const lines = result.trim().split("\n");
+
+    expect(lines).toEqual([
+      "1. user",
+      "2. assistant (project-manager) [anthropic/claude-sonnet-4-6]",
+      "3. user",
+      "4. assistant (retrospective) [anthropic/claude-sonnet-4-6]",
+    ]);
+  });
 });
