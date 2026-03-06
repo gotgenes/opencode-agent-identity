@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.0.0](https://github.com/gotgenes/opencode-agent-identity/compare/v2.1.1...v3.0.0) (2026-03-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* agent_attribution tool output no longer includes the agent name on user messages. Lines that were '1. user (agent-name)' are now '1. user'. Assistant message format is unchanged.
+
+### Features
+
+* remove agent annotation from user messages in agent_attribution tool ([699ff96](https://github.com/gotgenes/opencode-agent-identity/commit/699ff96a301761d469d68d22f2a332628b653f1c))
+
+
+### Documentation
+
+* create MIGRATION.md and update docs for v3 output format change ([347d666](https://github.com/gotgenes/opencode-agent-identity/commit/347d666c9c8f58c013c8d6d250f1ed1e93cee1b5))
+
+
+### Miscellaneous Chores
+
+* apply retrospective improvements to AGENTS.md ([9c9607e](https://github.com/gotgenes/opencode-agent-identity/commit/9c9607ed9cc1d03574d5e7cf5d44a38f90629525))
+
 ## [2.1.1](https://github.com/gotgenes/opencode-agent-identity/compare/v2.1.0...v2.1.1) (2026-03-06)
 
 
