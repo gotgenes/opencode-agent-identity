@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/gotgenes/opencode-agent-identity/compare/v3.0.0...v3.0.1) (2026-03-07)
+
+
+### Documentation
+
+* add related projects section linking opencode-model-announcer ([0a5e9fb](https://github.com/gotgenes/opencode-agent-identity/commit/0a5e9fb70bbddad5afb8741ca92b178e4e64c794))
+
 ## [3.0.0](https://github.com/gotgenes/opencode-agent-identity/compare/v2.1.1...v3.0.0) (2026-03-06)
 
 
