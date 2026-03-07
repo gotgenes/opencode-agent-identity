@@ -126,6 +126,10 @@ After running `prek install`, the following checks run automatically before each
 - Markdown linting
 - Biome linting and formatting
 
+## Related projects
+
+- [opencode-model-announcer](https://github.com/ramarivera/opencode-model-announcer) — Analogous to `AgentSelfIdentityPlugin` but for model identity: injects the current model name (e.g., `anthropic/claude-sonnet-4-6`) into the system prompt so the model knows which model it is operating as.
+
 ## License
 
 [MIT](LICENSE)
