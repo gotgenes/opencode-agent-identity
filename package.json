@@ -45,13 +45,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "^1.2.18"
+    "@opencode-ai/plugin": "^1.4.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.6",
-    "@opencode-ai/sdk": "^1.2.18",
+    "@biomejs/biome": "^2.4.11",
+    "@opencode-ai/sdk": "^1.4.3",
     "bun-types": "latest",
-    "markdownlint-cli2": "^0.21.0",
-    "typescript": "^5.7.3"
+    "markdownlint-cli2": "^0.22.0",
+    "typescript": "^6.0.2"
   }
 }
