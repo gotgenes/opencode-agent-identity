@@ -1,6 +1,11 @@
 import type { Plugin } from "@opencode-ai/plugin";
 import { tool } from "@opencode-ai/plugin";
-import type { MessageWithAgent } from "./types";
+import type { AssistantMessageInfo } from "./types";
+
+function formatModel(info: AssistantMessageInfo): string {
+  const base = `${info.providerID}/${info.modelID}`;
+  return info.variant ? `${base} (${info.variant})` : base;
+}
 
 export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
   return {
@@ -21,9 +26,9 @@ export const AgentAttributionToolPlugin: Plugin = async ({ client }) => {
             .map((msg, i) => {
               const line = `${i + 1}. ${msg.info.role}`;
               if (msg.info.role === "assistant") {
-                const info = msg.info as Partial<MessageWithAgent>;
+                const info = msg.info as Partial<AssistantMessageInfo>;
                 const agent = info.agent ?? "unknown";
-                return `${line} (${agent}) [${msg.info.providerID}/${msg.info.modelID}]`;
+                return `${line} (${agent}) [${formatModel(info as AssistantMessageInfo)}]`;
               }
               return line;
             })

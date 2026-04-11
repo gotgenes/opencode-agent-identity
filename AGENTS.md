@@ -38,7 +38,7 @@ The package exports two independent OpenCode plugins from `src/index.ts`:
 | Plugin | File | Mechanism | Purpose |
 | --- | --- | --- | --- |
 | `AgentSelfIdentityPlugin` | `src/agent-self-identity.ts` | Two hooks with session-scoped shared state | Injects `You are currently operating as the "X" agent.` into the system prompt so models know which agent they are |
-| `AgentAttributionToolPlugin` | `src/agent-attribution-tool.ts` | Tool registration via `tool()` | Exposes an `agent_attribution` tool that returns a numbered list of all messages in the session; user messages show only the role, assistant messages include the agent name and provider/model |
+| `AgentAttributionToolPlugin` | `src/agent-attribution-tool.ts` | Tool registration via `tool()` | Exposes an `agent_attribution` tool that returns a numbered list of all messages in the session; user messages show only the role, assistant messages include the agent name and provider/model (with variant when present) |
 
 **AgentSelfIdentityPlugin** uses a two-phase hook pattern:
 
@@ -47,7 +47,7 @@ The package exports two independent OpenCode plugins from `src/index.ts`:
 
 State is keyed by session ID so concurrent sessions don't interfere.
 
-**AgentAttributionToolPlugin** calls `client.session.messages()` via the OpenCode SDK to fetch all messages. The `agent` field on user messages reflects which agent the message was routed to (not which agent processed it), so only assistant attribution is shown.
+**AgentAttributionToolPlugin** calls `client.session.messages()` via the OpenCode SDK to fetch all messages. The `agent` field on user messages reflects which agent the message was routed to (not which agent processed it), so only assistant attribution is shown. When a `variant` field is present on an assistant message (e.g., `"high"`), it is appended to the model identifier in parentheses: `anthropic/claude-opus-4 (high)`.
 
 Shared types live in `src/types.ts` — see [SDK Type Gap](#sdk-type-gap) below.
 
@@ -79,11 +79,12 @@ When writing new tests, follow these patterns rather than attempting to construc
 
 ## SDK Type Gap
 
-The OpenCode plugin SDK (`@opencode-ai/plugin` v1) re-exports types from `@opencode-ai/sdk` v1, which lacks the `agent` field on `Message`.
-The field exists at runtime (added in SDK v2) but is missing from the v1 type definitions.
+The OpenCode plugin SDK (`@opencode-ai/plugin` v1) re-exports types from `@opencode-ai/sdk` v1, which lacks some fields present in v2.
+The `agent` field exists at runtime on both message types but is missing from v1 type definitions.
+The `variant` field (the specific model variant/snapshot, e.g., `"high"`) also exists at runtime but is absent from v1 types.
 
-`src/types.ts` defines `MessageWithAgent` and `MessageWithParts` as type augmentations to bridge this gap.
-Both plugins cast messages to these types to access `info.agent`.
+`src/types.ts` defines `MessageWithAgent`, `AssistantMessageInfo`, and `MessageWithParts` as type augmentations to bridge this gap.
+Both plugins cast messages to these types to access `info.agent`; the attribution tool additionally uses `AssistantMessageInfo` to access `info.variant`.
 
 Upstream issue: [opencode#15916](https://github.com/anomalyco/opencode/issues/15916).
 When the plugin SDK updates to use v2 types, these augmentations and the associated `as` casts can be removed.

@@ -12,6 +12,7 @@ function makeAssistantMessage(
   agent: string,
   providerID: string,
   modelID: string,
+  variant?: string,
 ) {
   return {
     info: {
@@ -19,6 +20,7 @@ function makeAssistantMessage(
       agent,
       providerID,
       modelID,
+      ...(variant !== undefined && { variant }),
       id: `msg-${Math.random()}`,
       sessionID: "ses-1",
     },
@@ -147,6 +149,24 @@ describe("AgentAttributionToolPlugin", () => {
     expect(lines).toEqual([
       "1. user",
       "2. assistant (build) [anthropic/claude-opus-4-6]",
+      "3. user",
+      "4. assistant (retrospective) [anthropic/claude-sonnet-4-6]",
+    ]);
+  });
+
+  it("includes model variant in assistant message header when present", async () => {
+    const { tool } = await setupTool([
+      makeMessage("user", "build"),
+      makeAssistantMessage("build", "anthropic", "claude-opus-4", "high"),
+      makeMessage("user", "retrospective"),
+      makeAssistantMessage("retrospective", "anthropic", "claude-sonnet-4-6"),
+    ]);
+    const result = await tool.execute({}, toolContext());
+    const lines = result.trim().split("\n");
+
+    expect(lines).toEqual([
+      "1. user",
+      "2. assistant (build) [anthropic/claude-opus-4 (high)]",
       "3. user",
       "4. assistant (retrospective) [anthropic/claude-sonnet-4-6]",
     ]);
