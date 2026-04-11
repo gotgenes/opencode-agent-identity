@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.1.0](https://github.com/gotgenes/opencode-agent-identity/compare/v3.0.1...v3.1.0) (2026-04-11)
+
+
+### Features
+
+* include model variant in agent attribution output ([baecaaf](https://github.com/gotgenes/opencode-agent-identity/commit/baecaafbcf4261b200ce62be9205de148e76b253))
+
+
+### Miscellaneous Chores
+
+* update all dependencies ([b263319](https://github.com/gotgenes/opencode-agent-identity/commit/b2633199c6852cc0d0359122b294795b46319528))
+
 ## [3.0.1](https://github.com/gotgenes/opencode-agent-identity/compare/v3.0.0...v3.0.1) (2026-03-07)
 
 
