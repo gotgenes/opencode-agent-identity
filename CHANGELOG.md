@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/gotgenes/opencode-agent-identity/compare/v3.1.0...v3.1.1) (2026-04-20)
+
+
+### Miscellaneous Chores
+
+* update dependencies and actions ([c7209df](https://github.com/gotgenes/opencode-agent-identity/commit/c7209df59b8f91e603b9e8e8a25a1133fe551d01))
+
 ## [3.1.0](https://github.com/gotgenes/opencode-agent-identity/compare/v3.0.1...v3.1.0) (2026-04-11)
 
 
