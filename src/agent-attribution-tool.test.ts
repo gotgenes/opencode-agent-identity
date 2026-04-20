@@ -56,6 +56,14 @@ async function setupTool(messages: ReturnType<typeof makeMessage>[]) {
   return { client, hooks, tool };
 }
 
+type ToolResult = Awaited<
+  ReturnType<Awaited<ReturnType<typeof setupTool>>["tool"]["execute"]>
+>;
+
+function getOutput(result: ToolResult) {
+  return typeof result === "string" ? result : result.output;
+}
+
 describe("AgentAttributionToolPlugin", () => {
   it("exposes an agent_attribution tool", async () => {
     const { hooks } = await setupTool([]);
@@ -101,7 +109,7 @@ describe("AgentAttributionToolPlugin", () => {
       path: { id: "ses-1" },
     });
 
-    const lines = result.trim().split("\n");
+    const lines = getOutput(result).trim().split("\n");
     expect(lines).toEqual([
       "1. user",
       "2. assistant (project-manager) [anthropic/claude-sonnet-4-6]",
@@ -128,7 +136,7 @@ describe("AgentAttributionToolPlugin", () => {
       msgNoAgent as any,
     ]);
     const result = await tool.execute({}, toolContext());
-    const lines = result.trim().split("\n");
+    const lines = getOutput(result).trim().split("\n");
 
     expect(lines[0]).toBe("1. user");
     expect(lines[1]).toBe(
@@ -144,7 +152,7 @@ describe("AgentAttributionToolPlugin", () => {
       makeAssistantMessage("retrospective", "anthropic", "claude-sonnet-4-6"),
     ]);
     const result = await tool.execute({}, toolContext());
-    const lines = result.trim().split("\n");
+    const lines = getOutput(result).trim().split("\n");
 
     expect(lines).toEqual([
       "1. user",
@@ -162,7 +170,7 @@ describe("AgentAttributionToolPlugin", () => {
       makeAssistantMessage("retrospective", "anthropic", "claude-sonnet-4-6"),
     ]);
     const result = await tool.execute({}, toolContext());
-    const lines = result.trim().split("\n");
+    const lines = getOutput(result).trim().split("\n");
 
     expect(lines).toEqual([
       "1. user",
@@ -180,7 +188,7 @@ describe("AgentAttributionToolPlugin", () => {
       makeAssistantMessage("retrospective", "anthropic", "claude-sonnet-4-6"),
     ]);
     const result = await tool.execute({}, toolContext());
-    const lines = result.trim().split("\n");
+    const lines = getOutput(result).trim().split("\n");
 
     expect(lines).toEqual([
       "1. user",
